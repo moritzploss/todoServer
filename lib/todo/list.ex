@@ -15,8 +15,13 @@ defmodule Todo.List do
   defguardp is_id(entry_id) when is_binary(entry_id)
 
   def get_entry(%List{} = todo_list, entry_id) when is_id(entry_id) do
-    case Map.get(todo_list.entries, entry_id) do
+    with {:ok, _info} <- UUID.info(entry_id),
+      entry = %Entry{} <- Map.get(todo_list.entries, entry_id, nil)
+    do
+      {:ok, entry}
+    else
       nil -> {:error, :no_entry_with_id}
+      {:error, _message} -> {:error, :id_invalid}
       entry -> {:ok, entry}
     end
   end
