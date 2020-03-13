@@ -32,4 +32,12 @@ defmodule Todo.List do
     new_entries = Map.delete(todo_list.entries, entry_id)
     {:ok, %Todo.List{todo_list | entries: new_entries}}
   end
+
+  def serialize(%List{} = todo_list) do
+    serialized_entries = for {id, entry} <- todo_list.entries, into: %{} do
+      {id, Entry.serialize(entry)}
+    end
+    serialized_list = Map.from_struct(%{todo_list | entries: serialized_entries})
+    {:ok, serialized_list}
+  end
 end
