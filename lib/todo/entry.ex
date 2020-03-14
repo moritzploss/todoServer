@@ -5,12 +5,16 @@ defmodule Todo.Entry do
   @status_options [:open, :closed]
 
   def new(description) when is_binary(description) do
-    %Todo.Entry{
+    {:ok, %Todo.Entry{
       id: UUID.uuid4(:default),
       date: DateTime.utc_now(),
       status: :open,
       description: description,
-    }
+    }}
+  end
+
+  def new(_description) do
+    {:error, :invalid_description}
   end
 
   defp replace(entry, key, value) do
@@ -18,14 +22,18 @@ defmodule Todo.Entry do
   end
 
   def update(entry, :status, status) when status in @status_options do
-    replace(entry, :status, status)
+    {:ok, replace(entry, :status, status)}
   end
 
   def update(entry, :description, description) when is_binary(description) do
-    replace(entry, :description, description)
+    {:ok, replace(entry, :description, description)}
+  end
+
+  def update(_entry, _key, _value) do
+    {:error, :invalid_key}
   end
 
   def serialize(entry) do
-    Map.from_struct(entry)
+    {:ok, Map.from_struct(entry)}
   end
 end

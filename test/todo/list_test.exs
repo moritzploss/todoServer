@@ -4,7 +4,7 @@ defmodule Todo.ListTest do
   alias Todo.{Entry, List}
 
   setup do
-    entry = Entry.new("Write more tests!")
+    {:ok, entry} = Entry.new("Write more tests!")
     list = List.new()
     %{list: list, entry: entry}
   end
@@ -33,7 +33,7 @@ defmodule Todo.ListTest do
   test "delete entry from list", %{list: list, entry: entry} do
     {:ok, list_with_entry} = List.add_entry(list, entry)
     {:ok, list_without_entry} = List.delete_entry(list_with_entry, entry.id)
-    {:error, :no_entry_with_id} = List.get_entry(list_without_entry, entry.id)
+    {:error, :id_not_found} = List.get_entry(list_without_entry, entry.id)
   end
 
   test "serialize list", %{list: list, entry: entry} do
