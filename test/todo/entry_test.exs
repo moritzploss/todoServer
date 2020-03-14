@@ -3,10 +3,14 @@ defmodule Todo.EntryTest do
 
   alias Todo.Entry
 
+  test "gracefully handle invalid description on initialization" do
+    {:error, _reason} = Entry.new(:write_a_passing_test!)
+  end
+
   test "update entry description" do
     {:ok, entry} = Entry.new("Write a failing test!")
     new_description = "Then make it pass!"
-    {:ok, new_entry} = Entry.update(entry, :description, new_description)
+    {:ok, new_entry} = Entry.update(entry, %{description: new_description})
 
     assert new_entry.description === new_description
     assert Map.delete(new_entry, :description) === Map.delete(entry, :description)
@@ -14,10 +18,25 @@ defmodule Todo.EntryTest do
 
   test "update entry status" do
     {:ok, entry} = Entry.new("Write a passing test!")
-    {:ok, closed_entry} = Entry.update(entry, :status, :closed)
+    {:ok, closed_entry} = Entry.update(entry, %{status: :closed})
 
     assert closed_entry.status === :closed
     assert Map.delete(closed_entry, :status) === Map.delete(entry, :status)
+  end
+
+  test "don't update entry description with invalid value" do
+    {:ok, entry} = Entry.new("Write a failing test!")
+    {:error, _reason} = Entry.update(entry, %{description: :then_make_it_pass})
+  end
+
+  test "don't update entry status with invalid value" do
+    {:ok, entry} = Entry.new("Write a passing test!")
+    {:error, _reason} = Entry.update(entry, %{status: :unknown_value})
+  end
+
+  test "don't update non-updatable keys" do
+    {:ok, entry} = Entry.new("Write a passing test!")
+    {:error, _reason} = Entry.update(entry, %{unknown_field: :unknown_value})
   end
 
   test "serialize entry" do

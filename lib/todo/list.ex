@@ -1,12 +1,16 @@
 defmodule Todo.List do
   alias Todo.{Entry, List}
 
-  defstruct entries: %{}
+  defstruct [:entries, :id, :owner_id]
 
   @id_not_found_error {:error, :id_not_found}
 
-  def new do
-    %Todo.List{}
+  def new(owner_id) when is_binary(owner_id) do
+    {:ok, %Todo.List{
+      entries: %{},
+      id: UUID.uuid4(:default),
+      owner_id: owner_id,
+    }}
   end
 
   def add_entry(%List{} = todo_list, %Entry{} = entry) do
