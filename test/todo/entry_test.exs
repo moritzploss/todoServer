@@ -22,6 +22,6 @@ defmodule Todo.EntryTest do
 
   test "serialize entry" do
     {:ok, entry} = Entry.new("Write a passing test!")
-    {:ok, %{id: _, date: _, description: _, status: _}} = Entry.serialize(entry)
+    %{id: _, date: _, description: _, status: _} = Entry.serialize!(entry)
   end
 end
