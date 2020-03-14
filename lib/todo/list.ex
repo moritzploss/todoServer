@@ -25,7 +25,7 @@ defmodule Todo.List do
     end
   end
 
-  def update_entry(%List{} = todo_list, entry_id, entry) when is_binary(entry_id) do
+  def update_entry(%List{} = todo_list, entry_id, %Entry{} = entry) when is_binary(entry_id) do
     case Map.fetch(todo_list.entries, entry_id) do
       {:ok, _entry} -> {:ok, Map.put(todo_list, entry_id, entry)}
       :error -> @id_not_found_error
