@@ -9,6 +9,14 @@ defmodule Todo.ListTest do
     %{list: list, entry: entry}
   end
 
+  test "create new list" do
+    {:ok, list} = List.new(UUID.uuid4(:default), UUID.uuid4(:default))
+
+    assert Map.has_key?(list, :id)
+    assert Map.has_key?(list, :owner_id)
+    assert Map.has_key?(list, :entries)
+  end
+
   test "add entry to list", %{list: list, entry: entry} do
     {:ok, list_with_entry} = List.add_entry(list, entry)
     assert list_with_entry.entries[entry.id] === entry
@@ -27,7 +35,7 @@ defmodule Todo.ListTest do
     {:ok, list_updated} = List.update_entry(list_with_entry, entry.id, new_entry)
     {:ok, entry_in_list} = List.get_entry(list_updated, entry.id)
 
-    assert entry_in_list !== new_entry
+    assert entry_in_list === new_entry
   end
 
   test "delete entry from list", %{list: list, entry: entry} do

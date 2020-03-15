@@ -3,11 +3,12 @@ defmodule Todo.ListServer do
 
   alias Todo.{Entry, List}
 
-  defp via(id) do
+  def via(id) do
     {:via, Registry, {Registry.TodoLists, id}}
   end
 
   # Client API
+
   def start_link(owner_id) do
     args = %{owner_id: owner_id, list_id: UUID.uuid4(:default)}
     GenServer.start(__MODULE__, args, name: via(args.list_id))
@@ -21,7 +22,7 @@ defmodule Todo.ListServer do
     GenServer.call(server_pid, {:get_entry, entry_id})
   end
 
-  def add_entry(server_pid, description) when is_binary(description) do
+  def add_entry(server_pid, description) do
     GenServer.call(server_pid, {:add_entry, description})
   end
 
@@ -34,21 +35,23 @@ defmodule Todo.ListServer do
   end
 
   # Callbacks
+
   @impl true
   def init(%{owner_id: owner_id, list_id: list_id}) do
-    {:ok, List.new(owner_id, list_id)}
+    {:ok, list} = List.new(owner_id, list_id)
+    {:ok, list}
   end
 
   @impl true
   def handle_call(:get_list, _from, state) do
-    state
+    {:reply, {:ok, state}, state}
   end
 
   @impl true
   def handle_call({:get_entry, entry_id}, _from, state) do
     case List.get_entry(state, entry_id) do
       {:ok, entry} -> {:reply, {:ok, entry}, state}
-      {:error, _reason} -> {:reply, :error, state}
+      {:error, reason} -> {:reply, {:error, reason}, state}
     end
   end
 
@@ -57,9 +60,9 @@ defmodule Todo.ListServer do
     with {:ok, entry} <- Entry.new(description),
       {:ok, list} <- List.add_entry(state, entry)
     do
-      {:reply, :ok, list}
+      {:reply, {:ok, entry}, list}
     else
-      {:error, _reason} -> {:reply, :error, state}
+      {:error, reason} -> {:reply, {:error, reason}, state}
     end
   end
 
@@ -69,9 +72,9 @@ defmodule Todo.ListServer do
       {:ok, entry} <- Entry.update(entry, to_update),
       {:ok, list} <- List.update_entry(state, entry_id, entry)
     do
-      {:reply, :ok, list}
+      {:reply, {:ok, entry}, list}
     else
-      {:error, _reason} -> {:reply, :error, state}
+      {:error, reason} -> {:reply, {:error, reason}, state}
     end
   end
 
@@ -79,7 +82,7 @@ defmodule Todo.ListServer do
   def handle_call({:delete_entry, entry_id}, _from, state) do
     case List.delete_entry(state, entry_id) do
       {:ok, list} -> {:reply, :ok, list}
-      {:error, _reason} -> {:reply, :error, state}
+      {:error, reason} -> {:reply, {:error, reason}, state}
     end
   end
 end

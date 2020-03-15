@@ -3,8 +3,17 @@ defmodule Todo.EntryTest do
 
   alias Todo.Entry
 
+  test "create new entry" do
+    {:ok, entry} = Entry.new("Write a passing test!")
+
+    assert Map.has_key?(entry, :id)
+    assert Map.has_key?(entry, :description)
+    assert Map.has_key?(entry, :status)
+    assert Map.has_key?(entry, :date)
+  end
+
   test "gracefully handle invalid description on initialization" do
-    {:error, _reason} = Entry.new(:write_a_passing_test!)
+    {:error, _reason} = Entry.new(:this_should_fail)
   end
 
   test "update entry description" do
