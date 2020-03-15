@@ -3,7 +3,7 @@ defmodule Todo.ListSupervisor do
 
   alias Todo.ListServer
 
-  defp pid_via_list_id(list_id) do
+  def pid_via_list_id(list_id) do
     list_id
     |> ListServer.via
     |> GenServer.whereis

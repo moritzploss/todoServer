@@ -6,7 +6,7 @@ defmodule Todo.ListSupervisorTest do
   setup do
     owner_id = UUID.uuid4(:default)
     {:ok, pid} = ListSupervisor.start_list(owner_id)
-    %{pid: pid, owner_id: owner_id}
+    %{pid: pid}
   end
 
   test "start new list server" do
@@ -34,5 +34,17 @@ defmodule Todo.ListSupervisorTest do
 
     assert Process.alive?(pid1)
     assert Process.alive?(pid2)
+  end
+
+  test "restart crashed list server with last good state", %{pid: pid} do
+    # TODO: this doesn't work as expected
+
+    {:ok, %{id: id}} = ListServer.get_list(pid)
+
+    IO.inspect Process.exit(pid, :kill)
+    IO.inspect Process.alive?(pid)
+
+    new_pid = ListSupervisor.pid_via_list_id(id)
+    IO.inspect new_pid
   end
 end

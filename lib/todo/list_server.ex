@@ -42,6 +42,11 @@ defmodule Todo.ListServer do
   end
 
   @impl true
+  def terminate(_reason, _state) do
+    :ok
+  end
+
+  @impl true
   def handle_call(:get_list, _from, state) do
     {:reply, {:ok, state}, state}
   end
