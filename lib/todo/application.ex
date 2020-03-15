@@ -8,5 +8,4 @@ defmodule Todo.Application do
     options = [strategy: :one_for_one, name: Todo.Supervisor]
     Supervisor.start_link(children, options)
   end
-
 end

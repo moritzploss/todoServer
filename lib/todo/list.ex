@@ -47,7 +47,6 @@ defmodule Todo.List do
     serialized_entries = for {id, entry} <- todo_list.entries, into: %{} do
       {id, Entry.serialize!(entry)}
     end
-    serialized_list = Map.from_struct(%{todo_list | entries: serialized_entries})
-    {:ok, serialized_list}
+    {:ok, Map.from_struct(%{todo_list | entries: serialized_entries})}
   end
 end

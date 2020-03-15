@@ -38,8 +38,7 @@ defmodule Todo.ListServer do
 
   @impl true
   def init(%{owner_id: owner_id, list_id: list_id}) do
-    {:ok, list} = List.new(owner_id, list_id)
-    {:ok, list}
+    List.new(owner_id, list_id)
   end
 
   @impl true
