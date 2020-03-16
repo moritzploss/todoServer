@@ -5,13 +5,13 @@ defmodule Todo.ListServerTest do
 
   setup do
     owner_id = UUID.uuid4(:default)
-    {:ok, pid} = ListServer.start_link(owner_id)
+    {:ok, pid} = ListServer.start_link(owner_id, UUID.uuid4(:default))
     %{pid: pid}
   end
 
   test "start a list server process" do
     owner_id = UUID.uuid4(:default)
-    {:ok, pid} = ListServer.start_link(owner_id)
+    {:ok, pid} = ListServer.start_link(owner_id, UUID.uuid4(:default))
     list = :sys.get_state(pid)
 
     assert list.owner_id === owner_id

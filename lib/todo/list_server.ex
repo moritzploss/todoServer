@@ -9,9 +9,9 @@ defmodule Todo.ListServer do
 
   # Client API
 
-  def start_link(owner_id) do
-    args = %{owner_id: owner_id, list_id: UUID.uuid4(:default)}
-    GenServer.start(__MODULE__, args, name: via(args.list_id))
+  def start_link(owner_id, list_id) do
+    args = %{owner_id: owner_id, list_id: list_id}
+    GenServer.start_link(__MODULE__, args, name: via(list_id))
   end
 
   def get_list(server_pid) do
@@ -39,11 +39,6 @@ defmodule Todo.ListServer do
   @impl true
   def init(%{owner_id: owner_id, list_id: list_id}) do
     List.new(owner_id, list_id)
-  end
-
-  @impl true
-  def terminate(_reason, _state) do
-    :ok
   end
 
   @impl true

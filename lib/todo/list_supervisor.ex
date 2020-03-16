@@ -16,14 +16,18 @@ defmodule Todo.ListSupervisor do
   def start_list(owner_id) do
     spec = %{
       id: ListServer,
-      start: {ListServer, :start_link, [owner_id]},
-      restart: :transient
+      start: {ListServer, :start_link, [owner_id, UUID.uuid4(:default)]},
+      restart: :transient,
     }
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
+  def stop_list(list_pid) when is_pid(list_pid) do
+    DynamicSupervisor.terminate_child(__MODULE__, list_pid)
+  end
+
   def stop_list(list_id) do
-    DynamicSupervisor.terminate_child(__MODULE__, pid_via_list_id(list_id))
+    stop_list(pid_via_list_id(list_id))
   end
 
   @impl true
