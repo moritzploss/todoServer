@@ -36,7 +36,7 @@ defmodule Todo.ListSupervisorTest do
     assert Process.alive?(pid2)
   end
 
-  test "stop list servers both pid and list ID", %{owner_id: owner_id}  do
+  test "stop list servers both via pid and list ID", %{owner_id: owner_id}  do
     {:ok, pid} = ListSupervisor.start_list(owner_id)
     {:ok, pid2} = ListSupervisor.start_list(owner_id)
 
