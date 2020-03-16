@@ -1,4 +1,4 @@
-![Todo](https://github.com/moritzploss/todoServer/workflows/Todo/badge.svg)
+![Todo Engine](https://github.com/moritzploss/todoServer/workflows/Todo%20Engine/badge.svg)
 
 # Todo Server
 

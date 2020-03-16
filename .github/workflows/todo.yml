@@ -1,4 +1,4 @@
-name: Todo
+name: Todo Engine
 
 on: push
 
@@ -16,7 +16,7 @@ jobs:
         otp-version: 22.2 # Define the OTP version [required]
     - name: Install Dependencies
       run: |
-        mix deps.get
+        cd todo_engine && mix deps.get
     - name: Run Tests
       run: |
-        mix test --cover
+        cd todo_engine && mix test --cover
