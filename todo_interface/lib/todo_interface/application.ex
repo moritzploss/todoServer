@@ -6,18 +6,12 @@ defmodule TodoInterface.Application do
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
     children = [
-      # Start the Ecto repository
       TodoInterface.Repo,
-      # Start the endpoint when the application starts
-      TodoInterfaceWeb.Endpoint
-      # Starts a worker by calling: TodoInterface.Worker.start_link(arg)
-      # {TodoInterface.Worker, arg},
+      TodoInterfaceWeb.Endpoint,
+      TodoInterfaceWeb.Presence
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: TodoInterface.Supervisor]
     Supervisor.start_link(children, opts)
   end

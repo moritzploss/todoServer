@@ -3,7 +3,7 @@ defmodule Todo.MixProject do
 
   def project do
     [
-      app: :todo,
+      app: :todo_engine,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
