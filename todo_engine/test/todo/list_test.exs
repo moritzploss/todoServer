@@ -43,9 +43,4 @@ defmodule Todo.ListTest do
     {:ok, list_without_entry} = List.delete_entry(list_with_entry, entry.id)
     {:error, :id_not_found} = List.get_entry(list_without_entry, entry.id)
   end
-
-  test "serialize list", %{list: list, entry: entry} do
-    {:ok, list_with_entry} = List.add_entry(list, entry)
-    {:ok, %{entries: %{} = _entries}} = List.serialize(list_with_entry)
-  end
 end

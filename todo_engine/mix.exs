@@ -25,7 +25,8 @@ defmodule Todo.MixProject do
       {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
       {:credo_naming, "~> 0.4", only: [:dev, :test], runtime: false},
       {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:jason, "~> 1.0"}
     ]
   end
 end

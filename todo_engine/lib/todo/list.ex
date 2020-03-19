@@ -1,6 +1,7 @@
 defmodule Todo.List do
   alias Todo.{Entry, List}
 
+  @derive {Jason.Encoder, only: [:entries, :id, :owner_id]}
   defstruct [:entries, :id, :owner_id]
 
   @id_not_found_error {:error, :id_not_found}
@@ -41,12 +42,5 @@ defmodule Todo.List do
         {:ok, %List{todo_list | entries: entries}}
       false -> @id_not_found_error
     end
-  end
-
-  def serialize(%List{} = todo_list) do
-    serialized_entries = for {id, entry} <- todo_list.entries, into: %{} do
-      {id, Entry.serialize!(entry)}
-    end
-    {:ok, Map.from_struct(%{todo_list | entries: serialized_entries})}
   end
 end

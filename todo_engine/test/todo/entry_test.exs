@@ -47,9 +47,4 @@ defmodule Todo.EntryTest do
     {:ok, entry} = Entry.new("Write a passing test!")
     {:error, _reason} = Entry.update(entry, %{unknown_field: :unknown_value})
   end
-
-  test "serialize entry" do
-    {:ok, entry} = Entry.new("Write a passing test!")
-    %{id: _, date: _, description: _, status: _} = Entry.serialize!(entry)
-  end
 end

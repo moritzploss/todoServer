@@ -4,6 +4,7 @@ defmodule Todo.Entry do
   @status_options [:open, :closed]
   @enforce_keys [:id, :date, :status, :description]
 
+  @derive {Jason.Encoder, only: [:id, :date, :status, :description]}
   defstruct @enforce_keys
 
   def new(description) when is_binary(description) do
@@ -46,9 +47,5 @@ defmodule Todo.Entry do
       {:error, reason} -> {:error, reason}
       updated_entry -> {:ok, updated_entry}
     end
-  end
-
-  def serialize!(%Entry{} = entry) do
-    Map.from_struct(entry)
   end
 end

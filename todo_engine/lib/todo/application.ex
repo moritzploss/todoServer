@@ -5,7 +5,7 @@ defmodule Todo.Application do
     children = [
       {Registry, keys: :unique, name: Registry.TodoLists},
       {Registry, keys: :unique, name: Registry.TodoUsers},
-      Todo.UserSupervisor
+      Todo.UserManager
     ]
     options = [strategy: :one_for_one, name: Todo.Supervisor]
     Supervisor.start_link(children, options)

@@ -1,11 +1,11 @@
-defmodule Todo.UserSupervisor do
+defmodule Todo.UserManager do
   use DynamicSupervisor
 
-  alias Todo.ListSupervisor
+  alias Todo.ListManager
 
   def list_supervisor_pid_via_user_id(user_id) do
     user_id
-    |> ListSupervisor.via
+    |> ListManager.via
     |> GenServer.whereis
   end
 
@@ -15,8 +15,8 @@ defmodule Todo.UserSupervisor do
 
   def start_list_supervisor(user_id) do
     spec = %{
-      id: ListSupervisor,
-      start: {ListSupervisor, :start_link, [user_id]},
+      id: ListManager,
+      start: {ListManager, :start_link, [user_id]},
       restart: :transient,
     }
     DynamicSupervisor.start_child(__MODULE__, spec)

@@ -1,4 +1,4 @@
-defmodule Todo.ListSupervisor do
+defmodule Todo.ListManager do
   use DynamicSupervisor
 
   alias Todo.ListServer
