@@ -12,7 +12,7 @@ list server built with `Elixir`, `OTP`, and `Phoenix`.
 The following assumes that you have a working installation of `Elixir`
 (including `mix`) and `Node.js` (including `npm`).
 
-### Todo Engine
+### Todo
 
 This directory contains all logic related to creating and modifying Todo lists.
 Lists are implemented as `GenServer` processes and supervised by a

@@ -43,7 +43,7 @@ defmodule TodoInterface.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:todo_engine, path: "../todo_engine"}
+      {:todo_engine, path: "../todo"}
     ]
   end
 

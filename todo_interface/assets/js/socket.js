@@ -26,7 +26,7 @@ const joinChannel = (channel) => channel
   .receive('ok', (reply) => console.log(`joined channel '${channel.topic}':`, reply))
   .receive('error', (reply) => console.log(`Unable to join '${channel.topic}':`, reply));
 
-const channel = createChannel(socket, 'foo', 'mo');
+const channel = createChannel(socket, '', 'mo');
 joinChannel(channel);
 
 export default socket

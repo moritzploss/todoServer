@@ -27,7 +27,10 @@ defmodule Todo.UserManager do
   end
 
   def stop_list_supervisor(user_id) when is_binary(user_id) do
-    stop_list_supervisor(list_supervisor_pid_via_user_id(user_id))
+    case list_supervisor_pid_via_user_id(user_id) do
+      nil -> {:error, :not_found}
+      pid -> stop_list_supervisor(pid)
+    end
   end
 
   @impl true

@@ -18,13 +18,17 @@ defmodule Todo.UserManagerTest do
 
   test "stop list supervisor by pid", %{pid: pid} do
     assert Process.alive?(pid)
-    UserManager.stop_list_supervisor(pid)
+    :ok = UserManager.stop_list_supervisor(pid)
     assert not Process.alive?(pid)
   end
 
   test "stop list supervisor by user id", %{pid: pid, user_id: user_id} do
     assert Process.alive?(pid)
-    UserManager.stop_list_supervisor(user_id)
+    :ok = UserManager.stop_list_supervisor(user_id)
     assert not Process.alive?(pid)
+  end
+
+  test "gracefully handle stop request with non-existing user id" do
+    {:error, _reason} = UserManager.stop_list_supervisor(UUID.uuid4(:default))
   end
 end
