@@ -5,14 +5,14 @@ defmodule Todo.ListManagerTest do
 
   setup do
     user_id = UUID.uuid4(:default)
-    {:ok, pid} = UserManager.start_list_supervisor(user_id)
+    {:ok, pid} = UserManager.start_list_manager(user_id)
     {:ok, list_pid} = ListManager.start_list(pid)
     %{pid: pid, list_pid: list_pid, user_id: user_id}
   end
 
   test "start new list server" do
     user_id = UUID.uuid4(:default)
-    {:ok, pid} = UserManager.start_list_supervisor(user_id)
+    {:ok, pid} = UserManager.start_list_manager(user_id)
     {:ok, list_pid} = ListManager.start_list(pid)
 
     assert Process.alive?(list_pid)

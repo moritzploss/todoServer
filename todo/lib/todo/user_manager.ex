@@ -13,7 +13,7 @@ defmodule Todo.UserManager do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
-  def start_list_supervisor(user_id) do
+  def start_list_manager(user_id) do
     spec = %{
       id: ListManager,
       start: {ListManager, :start_link, [user_id]},
@@ -22,14 +22,14 @@ defmodule Todo.UserManager do
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
-  def stop_list_supervisor(supervisor_pid) when is_pid(supervisor_pid) do
+  def stop_list_manager(supervisor_pid) when is_pid(supervisor_pid) do
     DynamicSupervisor.terminate_child(__MODULE__, supervisor_pid)
   end
 
-  def stop_list_supervisor(user_id) when is_binary(user_id) do
+  def stop_list_manager(user_id) when is_binary(user_id) do
     case list_supervisor_pid_via_user_id(user_id) do
       nil -> {:error, :not_found}
-      pid -> stop_list_supervisor(pid)
+      pid -> stop_list_manager(pid)
     end
   end
 
