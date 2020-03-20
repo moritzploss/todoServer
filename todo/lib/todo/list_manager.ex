@@ -38,7 +38,15 @@ defmodule Todo.ListManager do
     stop_list(pid, server_pid_via_list_id(list_id))
   end
 
+  def get_lists(pid) do
+    pid
+    |> DynamicSupervisor.which_children
+    |> Enum.map(fn {_id, list_pid, _type, _modules} -> list_pid end)
+    |> Enum.map(&ListServer.get_list(&1))
+  end
+
   @impl true
+  @spec init({:user_id, any}) :: {:ok, %{extra_arguments: [any], intensity: non_neg_integer, max_children: :infinity | non_neg_integer, period: pos_integer, strategy: :one_for_one}}
   def init({:user_id, user_id}) do
     DynamicSupervisor.init(strategy: :one_for_one, extra_arguments: [user_id])
   end

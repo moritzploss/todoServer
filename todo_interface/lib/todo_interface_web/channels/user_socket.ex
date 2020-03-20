@@ -2,6 +2,7 @@ defmodule TodoInterfaceWeb.UserSocket do
   use Phoenix.Socket
 
   channel "list:*", TodoInterfaceWeb.ListChannel
+  channel "user:*", TodoInterfaceWeb.UserChannel
 
   ## Channels
   # channel "room:*", TodoInterfaceWeb.RoomChannel

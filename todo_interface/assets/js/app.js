@@ -11,12 +11,12 @@ import css from "../css/app.css"
 //
 import "phoenix_html"
 
+import { joinChannel, socket } from './socket';
+import { createUserChannel } from './user';
+import { createListChannel } from './list';
 
-// Import local files
-//
-// Local files can be imported directly using relative paths, for example:
-// import socket from "./socket"
-import socket from "./socket"
+const userChannel = createUserChannel(socket, 'mo');
+joinChannel(userChannel)
 
-
-// import * as presence from "./presence"
+const listChannel = createListChannel(socket, '', 'mo');
+joinChannel(listChannel)

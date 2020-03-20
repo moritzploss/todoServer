@@ -38,7 +38,7 @@ Install the dependencies:
     mix deps.get
     cd assets && npm install
 
-Create a database and SSL certficate:
+Create a database:
 
     docker pull postgres:12.2
     docker run \
