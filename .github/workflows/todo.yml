@@ -16,7 +16,7 @@ jobs:
         otp-version: 22.2 # Define the OTP version [required]
     - name: Install Dependencies
       run: |
-        cd todo_engine && mix deps.get
+        cd todo && mix deps.get
     - name: Run Tests
       run: |
-        cd todo_engine && mix test --cover
+        cd todo && mix test --cover

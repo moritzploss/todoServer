@@ -14,7 +14,11 @@ defmodule Todo.ListManager do
   end
 
   def start_link(user_id) do
-    DynamicSupervisor.start_link(__MODULE__, {:user_id, user_id}, name: via(user_id))
+    DynamicSupervisor.start_link(
+      __MODULE__,
+      {:user_id, user_id},
+      name: via(user_id)
+    )
   end
 
   def start_list(pid) do
