@@ -31,4 +31,15 @@ defmodule Todo.UserManagerTest do
   test "gracefully handle stop request with non-existing user id" do
     {:error, _reason} = UserManager.stop_list_supervisor(UUID.uuid4(:default))
   end
+
+  test "restart crashed list manager" do
+    {:ok, manager_pid} = UserManager.start_list_supervisor(UUID.uuid4(:default))
+    child_count = length(DynamicSupervisor.which_children(UserManager))
+    assert Process.alive?(manager_pid)
+
+    Process.exit(manager_pid, :kill)
+
+    assert not Process.alive?(manager_pid)
+    assert child_count === length(DynamicSupervisor.which_children(UserManager))
+  end
 end
