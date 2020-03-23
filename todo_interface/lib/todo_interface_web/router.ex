@@ -1,6 +1,8 @@
 defmodule TodoInterfaceWeb.Router do
   use TodoInterfaceWeb, :router
 
+  @crud [:index, :show, :create, :update, :delete]
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -17,7 +19,16 @@ defmodule TodoInterfaceWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    get "/login", LoginController, :index
+  end
+
+  scope "/api/v1", TodoInterfaceWeb do
+    pipe_through :api
+
+    resources "/users", UserController, only: @crud do
+      resources "/lists", ListController, only: [:index, :show, :create, :delete] do
+        resources "/entries", EntryController, only: @crud
+      end
+    end
   end
 
   # Other scopes may use custom stacks.
