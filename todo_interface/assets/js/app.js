@@ -10,13 +10,3 @@ import css from "../css/app.css"
 // Import dependencies
 //
 import "phoenix_html"
-
-import { joinChannel, socket } from './socket';
-import { createUserChannel } from './user';
-import { createListChannel } from './list';
-
-const userChannel = createUserChannel(socket, 'mo');
-joinChannel(userChannel)
-
-const listChannel = createListChannel(socket, '', 'mo');
-joinChannel(listChannel)

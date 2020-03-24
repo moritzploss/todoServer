@@ -43,6 +43,15 @@ defmodule Todo.ListManager do
     |> DynamicSupervisor.which_children
     |> Enum.map(fn {_id, list_pid, _type, _modules} -> list_pid end)
     |> Enum.map(&ListServer.get_list(&1))
+    |> Enum.map(fn {:ok, list} -> list end)
+  end
+
+  def get_list(pid, list_id) do
+    lists = get_lists(pid)
+    case Enum.find(lists, nil, fn list -> list.id === list_id end) do
+      nil -> {:error, :not_found}
+      list -> {:ok, list}
+    end
   end
 
   @impl true
