@@ -1,6 +1,8 @@
 defmodule TodoInterfaceWeb.ListController do
   use TodoInterfaceWeb, :controller
 
+  action_fallback TodoInterfaceWeb.ApiFallbackController
+
   alias Todo.{ListServer, ListManager, UserManager}
 
   defp get_list_manager(user_id) when is_binary(user_id) do
@@ -18,11 +20,12 @@ defmodule TodoInterfaceWeb.ListController do
   end
 
   def show(conn, %{"id" => id, "user_id" => user_id}) do
-    {:ok, list} = user_id
-    |> get_list_manager
-    |> ListManager.get_list(id)
-
-    json(conn, list)
+    with {:ok, list} <- user_id
+      |> get_list_manager
+      |> ListManager.get_list(id)
+    do
+      json(conn, list)
+    end
   end
 
   def create(conn, %{"user_id" => user_id}) do
@@ -37,9 +40,8 @@ defmodule TodoInterfaceWeb.ListController do
 
   def delete(conn, %{"id" => id, "user_id" => user_id}) do
     :ok = user_id
-    |> get_list_manager
-    |> ListManager.stop_list(id)
-
+      |> get_list_manager
+      |> ListManager.stop_list(id)
     json(conn, %{})
   end
 end

@@ -43,7 +43,10 @@ defmodule TodoInterface.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:todo_engine, path: "../todo"}
+      {:todo_engine, path: "../todo"},
+      {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
+      {:credo_naming, "~> 0.4", only: [:dev, :test], runtime: false},
+      {:credo_contrib, "~> 0.2.0", only: [:dev, :test], runtime: false}
     ]
   end
 
