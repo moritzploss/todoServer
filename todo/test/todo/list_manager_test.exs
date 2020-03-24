@@ -53,7 +53,7 @@ defmodule Todo.ListManagerTest do
     assert not Process.alive?(list_pid2)
   end
 
-  test "restart crashed list servers", %{pid: pid} do
+  test "restart crashed list servers with last good state", %{pid: pid} do
     Enum.map(DynamicSupervisor.which_children(pid),
       fn {_id, child_pid, _type, _modules} ->
         ListManager.stop_list(pid, child_pid)
@@ -66,6 +66,7 @@ defmodule Todo.ListManagerTest do
 
     {:ok, list_pid} = ListManager.start_list(pid)
     {:ok, %{id: list_id}} = ListServer.get_list(list_pid)
+    {:ok, entry} = ListServer.add_entry(list_pid, "test")
     assert count_workers.() === 1
 
     {:ok, _pid} = ListManager.start_list(pid)
@@ -73,6 +74,7 @@ defmodule Todo.ListManagerTest do
 
     assert Process.alive?(list_pid)
     Process.exit(list_pid, :kaboom)
+
     assert not Process.alive?(list_pid)
 
     Process.sleep(10) # give DynamicSupervisor some time to restart child
@@ -80,5 +82,7 @@ defmodule Todo.ListManagerTest do
     assert pid_after_crash !== list_pid
     assert Process.alive?(pid_after_crash)
     assert count_workers.() === 2
+
+    assert {:ok, entry_recovered} = ListServer.get_entry(pid_after_crash, entry.id)
   end
 end

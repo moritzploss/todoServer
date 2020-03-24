@@ -7,7 +7,7 @@ defmodule TodoInterface.Application do
 
   def start(_type, _args) do
     children = [
-      TodoInterface.Repo,
+      # TodoInterface.Repo,
       TodoInterfaceWeb.Endpoint,
       TodoInterfaceWeb.Presence
     ]

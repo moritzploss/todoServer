@@ -55,8 +55,10 @@ defmodule Todo.ListManager do
   end
 
   @impl true
-  @spec init({:user_id, any}) :: {:ok, %{extra_arguments: [any], intensity: non_neg_integer, max_children: :infinity | non_neg_integer, period: pos_integer, strategy: :one_for_one}}
   def init({:user_id, user_id}) do
-    DynamicSupervisor.init(strategy: :one_for_one, extra_arguments: [user_id])
+    DynamicSupervisor.init(
+      strategy: :one_for_one,
+      extra_arguments: [user_id]
+    )
   end
 end

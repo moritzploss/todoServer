@@ -1,0 +1,25 @@
+name: Todo Interface
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup elixir
+      uses: actions/setup-elixir@v1
+      with:
+        elixir-version: 1.10.1 # Define the elixir version [required]
+        otp-version: 22.2 # Define the OTP version [required]
+    - name: Install Dependencies
+      run: |
+        cd todo_interface
+        mix archive.install hex phx_new 1.4.15
+        mix deps.get
+        cd assets && npm i
+    - name: Run Tests
+      run: |
+        cd todo_interface && mix test --cover
