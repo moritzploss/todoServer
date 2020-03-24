@@ -28,6 +28,14 @@ defmodule Todo.UserManagerTest do
     assert not Process.alive?(pid)
   end
 
+  test "get or create list supervisor by user id" do
+    user_id = UUID.uuid4(:default)
+    {:ok, pid_create} = UserManager.get_or_create_list_manager(user_id)
+    {:ok, pid_get} = UserManager.get_or_create_list_manager(user_id)
+
+    assert pid_create === pid_get
+  end
+
   test "gracefully handle stop request with non-existing user id" do
     {:error, _reason} = UserManager.stop_list_manager(UUID.uuid4(:default))
   end
