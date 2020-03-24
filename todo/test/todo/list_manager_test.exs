@@ -24,6 +24,12 @@ defmodule Todo.ListManagerTest do
     assert not Process.alive?(list_pid)
   end
 
+  test "get list via list id", %{pid: pid, list_pid: list_pid} do
+    {:ok, list1} = ListServer.get_list(list_pid)
+    {:ok, list2} = ListManager.get_list(pid, list1.id)
+    assert list1 === list2
+  end
+
   test "start mulptiple list servers", %{pid: pid} do
     {:ok, pid1} = ListManager.start_list(pid)
     {:ok, pid2} = ListManager.start_list(pid)
