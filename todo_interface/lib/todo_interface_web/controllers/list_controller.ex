@@ -39,9 +39,11 @@ defmodule TodoInterfaceWeb.ListController do
   end
 
   def delete(conn, %{"id" => id, "user_id" => user_id}) do
-    :ok = user_id
+    with :ok <- user_id
       |> get_list_manager
       |> ListManager.stop_list(id)
-    json(conn, %{})
+    do
+      json(conn, %{})
+    end
   end
 end

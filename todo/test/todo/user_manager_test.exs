@@ -1,7 +1,7 @@
 defmodule Todo.UserManagerTest do
   use ExUnit.Case, async: false
 
-  alias Todo.{UserManager, ListManager, ListServer}
+  alias Todo.UserManager
 
   setup do
     user_id = UUID.uuid4(:default)
@@ -18,14 +18,12 @@ defmodule Todo.UserManagerTest do
 
   test "stop list supervisor by pid", %{pid: pid} do
     assert Process.alive?(pid)
-    :ok = UserManager.stop_list_manager(pid)
-    assert not Process.alive?(pid)
+    assert :ok = UserManager.stop_list_manager(pid)
   end
 
   test "stop list supervisor by user id", %{pid: pid, user_id: user_id} do
     assert Process.alive?(pid)
-    :ok = UserManager.stop_list_manager(user_id)
-    assert not Process.alive?(pid)
+    assert :ok = UserManager.stop_list_manager(user_id)
   end
 
   test "get or create list supervisor by user id" do

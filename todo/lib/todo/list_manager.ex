@@ -30,12 +30,15 @@ defmodule Todo.ListManager do
     DynamicSupervisor.start_child(pid, spec)
   end
 
-  def stop_list(pid, list_pid) when is_pid(list_pid) do
+  def stop_list(pid, list_pid) when is_pid(pid) and is_pid(list_pid) do
     DynamicSupervisor.terminate_child(pid, list_pid)
   end
 
-  def stop_list(pid, list_id) do
-    stop_list(pid, server_pid_via_list_id(list_id))
+  def stop_list(pid, list_id) when is_pid(pid) and is_binary(list_id) do
+    case server_pid_via_list_id(list_id) do
+      nil -> {:error, :not_found}
+      server_pid -> stop_list(pid, server_pid)
+    end
   end
 
   def get_lists(pid) do
