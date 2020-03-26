@@ -1,7 +1,7 @@
 defmodule Todo.ListServer do
   use GenServer
 
-  alias Todo.{Entry, List}
+  alias Todo.Entry
 
   def via(id) do
     {:via, Registry, {Registry.TodoLists, id}}
@@ -41,7 +41,7 @@ defmodule Todo.ListServer do
   end
 
   defp initialize_list(owner_id, list_id) do
-    {:ok, list} = List.new(owner_id, list_id)
+    {:ok, list} = Todo.List.new(owner_id, list_id)
     save_list_state(list)
     list
   end
@@ -63,7 +63,7 @@ defmodule Todo.ListServer do
 
   @impl true
   def handle_call({:get_entry, entry_id}, _from, state) do
-    case List.get_entry(state, entry_id) do
+    case Todo.List.get_entry(state, entry_id) do
       {:ok, entry} -> {:reply, {:ok, entry}, state}
       {:error, reason} -> {:reply, {:error, reason}, state}
     end
@@ -72,7 +72,7 @@ defmodule Todo.ListServer do
   @impl true
   def handle_call({:add_entry, description}, _from, state) do
     with {:ok, entry} <- Entry.new(description),
-      {:ok, list} <- List.add_entry(state, entry)
+      {:ok, list} <- Todo.List.add_entry(state, entry)
     do
       save_list_state(list)
       {:reply, {:ok, entry}, list}
@@ -83,9 +83,9 @@ defmodule Todo.ListServer do
 
   @impl true
   def handle_call({:update_entry, entry_id, to_update}, _from, state) do
-    with {:ok, entry} <- List.get_entry(state, entry_id),
+    with {:ok, entry} <- Todo.List.get_entry(state, entry_id),
       {:ok, entry} <- Entry.update(entry, to_update),
-      {:ok, list} <- List.update_entry(state, entry_id, entry)
+      {:ok, list} <- Todo.List.update_entry(state, entry_id, entry)
     do
       save_list_state(list)
       {:reply, {:ok, entry}, list}
@@ -96,7 +96,7 @@ defmodule Todo.ListServer do
 
   @impl true
   def handle_call({:delete_entry, entry_id}, _from, state) do
-    case List.delete_entry(state, entry_id) do
+    case Todo.List.delete_entry(state, entry_id) do
       {:ok, list} ->
         save_list_state(list)
         {:reply, :ok, list}

@@ -4,6 +4,8 @@ defmodule Todo.UserManagerTest do
   alias Todo.UserManager
 
   setup do
+    on_exit(&UserManager.stop_list_managers/0)
+
     user_id = UUID.uuid4(:default)
     {:ok, pid} = UserManager.start_list_manager(user_id)
     %{pid: pid, user_id: user_id}
@@ -47,6 +49,10 @@ defmodule Todo.UserManagerTest do
 
     assert not Process.alive?(manager_pid)
     assert child_count === length(DynamicSupervisor.which_children(UserManager))
+  end
+
+  test "keep track of all users", %{user_id: user_id} do
+    assert [^user_id] = UserManager.which_users()
   end
 
   # test "restart crashed list manager with last good state", %{pid: pid} do

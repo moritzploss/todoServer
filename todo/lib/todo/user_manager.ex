@@ -29,7 +29,17 @@ defmodule Todo.UserManager do
     end
   end
 
+  def which_users do
+    __MODULE__
+    |> DynamicSupervisor.which_children
+    |> Enum.map(fn {_id, list_manager_pid, _type, _modules} ->
+        Registry.keys(Registry.TodoUsers, list_manager_pid)
+      end)
+    |> List.flatten()
+  end
+
   def stop_list_manager(supervisor_pid) when is_pid(supervisor_pid) do
+    :ok = Registry.unregister(Registry.TodoUsers, supervisor_pid)
     DynamicSupervisor.terminate_child(__MODULE__, supervisor_pid)
   end
 
@@ -38,6 +48,10 @@ defmodule Todo.UserManager do
       nil -> {:error, :not_found}
       pid -> stop_list_manager(pid)
     end
+  end
+
+  def stop_list_managers do
+    Enum.each(which_users(), &stop_list_manager(&1))
   end
 
   @impl true

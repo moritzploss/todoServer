@@ -1,8 +1,10 @@
 defmodule TodoInterfaceWeb.UserController do
   use TodoInterfaceWeb, :controller
 
+  alias Todo.UserManager
+
   def index(conn, _params) do
-    json(conn, %{hello: "hello"})
+    json(conn, %{users: UserManager.which_users()})
   end
 
   def show(conn, %{"id" => id}) do

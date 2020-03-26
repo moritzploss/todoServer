@@ -4,6 +4,8 @@ defmodule Todo.ListManagerTest do
   alias Todo.{ListManager, ListServer, UserManager}
 
   setup do
+    on_exit(&UserManager.stop_list_managers/0)
+
     user_id = UUID.uuid4(:default)
     {:ok, pid} = UserManager.start_list_manager(user_id)
     {:ok, list_pid} = ListManager.start_list(pid)
