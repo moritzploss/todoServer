@@ -48,7 +48,7 @@ defmodule Todo.ListServer do
 
   # Callbacks
 
-  @impl true
+  @impl GenServer
   def init(%{owner_id: owner_id, list_id: list_id}) do
     case :ets.lookup(:list_state, list_id) do
       [] -> {:ok, initialize_list(owner_id, list_id)}
@@ -56,12 +56,12 @@ defmodule Todo.ListServer do
     end
   end
 
-  @impl true
+  @impl GenServer
   def handle_call(:get_list, _from, state) do
     {:reply, {:ok, state}, state}
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:get_entry, entry_id}, _from, state) do
     case Todo.List.get_entry(state, entry_id) do
       {:ok, entry} -> {:reply, {:ok, entry}, state}
@@ -69,7 +69,7 @@ defmodule Todo.ListServer do
     end
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:add_entry, description}, _from, state) do
     with {:ok, entry} <- Entry.new(description),
       {:ok, list} <- Todo.List.add_entry(state, entry)
@@ -81,7 +81,7 @@ defmodule Todo.ListServer do
     end
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:update_entry, entry_id, to_update}, _from, state) do
     with {:ok, entry} <- Todo.List.get_entry(state, entry_id),
       {:ok, entry} <- Entry.update(entry, to_update),
@@ -94,7 +94,7 @@ defmodule Todo.ListServer do
     end
   end
 
-  @impl true
+  @impl GenServer
   def handle_call({:delete_entry, entry_id}, _from, state) do
     case Todo.List.delete_entry(state, entry_id) do
       {:ok, list} ->

@@ -57,7 +57,7 @@ defmodule Todo.ListManager do
     end
   end
 
-  @impl true
+  @impl DynamicSupervisor
   def init({:user_id, user_id}) do
     DynamicSupervisor.init(
       strategy: :one_for_one,

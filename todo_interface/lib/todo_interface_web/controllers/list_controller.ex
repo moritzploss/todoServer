@@ -3,7 +3,7 @@ defmodule TodoInterfaceWeb.ListController do
 
   action_fallback TodoInterfaceWeb.ApiFallbackController
 
-  alias Todo.{ListServer, ListManager, UserManager}
+  alias Todo.{ListManager, ListServer, UserManager}
 
   defp get_list_manager(user_id) when is_binary(user_id) do
     user_id

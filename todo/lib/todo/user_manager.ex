@@ -54,7 +54,7 @@ defmodule Todo.UserManager do
     Enum.each(which_users(), &stop_list_manager(&1))
   end
 
-  @impl true
+  @impl DynamicSupervisor
   def init(:ok) do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
