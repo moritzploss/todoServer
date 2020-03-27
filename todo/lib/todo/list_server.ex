@@ -22,6 +22,10 @@ defmodule Todo.ListServer do
     GenServer.call(server_pid, {:get_entry, entry_id})
   end
 
+  def which_entries(server_pid) do
+    GenServer.call(server_pid, :which_entries)
+  end
+
   def add_entry(server_pid, description) do
     GenServer.call(server_pid, {:add_entry, description})
   end
@@ -67,6 +71,11 @@ defmodule Todo.ListServer do
       {:ok, entry} -> {:reply, {:ok, entry}, state}
       {:error, reason} -> {:reply, {:error, reason}, state}
     end
+  end
+
+  @impl GenServer
+  def handle_call(:which_entries, _from, state) do
+    {:reply, {:ok, state.entries}, state}
   end
 
   @impl GenServer
