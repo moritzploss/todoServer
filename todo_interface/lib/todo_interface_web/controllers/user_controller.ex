@@ -21,8 +21,8 @@ defmodule TodoInterfaceWeb.UserController do
 
   def create(conn, _params) do
     conn
-    |> put_status(:bad_request)
-    |> json(%{error: "request body must contain key 'name' with value type string"})
+      |> put_status(:bad_request)
+      |> json(%{error: "request body must contain key 'name' with value type string"})
   end
 
   def update(conn, %{"id" => id, "name" => name}) do

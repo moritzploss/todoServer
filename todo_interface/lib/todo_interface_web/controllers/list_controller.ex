@@ -7,14 +7,14 @@ defmodule TodoInterfaceWeb.ListController do
 
   defp get_list_manager(user_id) when is_binary(user_id) do
     user_id
-    |> UserManager.get_or_create_list_manager
-    |> elem(1)
+      |> UserManager.get_or_create_list_manager
+      |> elem(1)
   end
 
   def index(conn, %{"user_id" => user_id}) do
     lists = user_id
-    |> get_list_manager
-    |> ListManager.get_lists
+      |> get_list_manager
+      |> ListManager.get_lists
 
     json(conn, %{lists: lists})
   end
@@ -30,10 +30,10 @@ defmodule TodoInterfaceWeb.ListController do
 
   def create(conn, %{"user_id" => user_id}) do
     {:ok, list} = user_id
-    |> get_list_manager
-    |> ListManager.start_list
-    |> elem(1)
-    |> ListServer.get_list
+      |> get_list_manager
+      |> ListManager.start_list
+      |> elem(1)
+      |> ListServer.get_list
 
     json(conn, list)
   end
