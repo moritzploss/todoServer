@@ -5,19 +5,19 @@
 This repo contains an implementation of a stateful and highly concurrent Todo 
 list server built with `Elixir`, `OTP`, and `Phoenix`. The aim of the project
 was to deepen my understanding of supervision strategies in `OTP` and to explore
-`Phoenix`. The resulting app can serve as a simple backend for a Todo list
-application.
+`Phoenix`.
 
-In particular, the RESTful API allows for CRUD operations on resources of
-type `user`, `list` and `entry`. The endpoints are structured as follows:
+The app can serve as a simple backend for a Todo list application. In
+particular, the RESTful API allows for CRUD operations on resources of type
+`user`, `list` and `entry`. The endpoints are structured as follows:
 
     localhost:4000/api/v1/users/<user_id>/lists/<list_id>/entries/<entry_id>
 
-For example, create a new Todo list for a user with ID `test123` via a
-POST request to the following endpoint, including the `name` of the list in the
-request body:
+For an overview of endpoints run:
 
-    localhost:4000/api/v1/users/test123/lists/
+    cd todo_interface && mix phx.routes
+
+## Supervision Strategy
 
 One user can have multiple Todo lists. For each list, state is being persisted
 inside a separate `GenServer` process. In case of a crash, state is recovered
@@ -31,10 +31,6 @@ Todo.UserManager     ->   Todo.ListManager            ->   Todo.ListServer
                           - Registered by user ID in       - Registered by list ID in
                             Registry.TodoUsers               Registry.TodoLists
 ```
-
-This strategy could be improved in the future as restarting crashed
-`ListManager` processes isn't trivial (list IDs are randomly generated at
-runtime, and don't persist if a `ListManager` crashes).
 
 ## Getting Started
 
