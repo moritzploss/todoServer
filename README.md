@@ -94,21 +94,6 @@ Visualize the dependency tree:
 
     mix deps.tree
 
-## Working with `Ecto`
-
-Create new table migration config:
-
-    mix ecto.gen.migration <table-name>
-
-Run migration:
-
-    mix ecto.migrate
-
-Rollback migration:
-
-    mix ecto.rollback
-
 ## Useful Links
 
 - Credo Style Guide: https://github.com/rrrene/elixir-style-guide
-- Ecto *Getting Started* Guide: https://hexdocs.pm/ecto/getting-started.html
