@@ -13,8 +13,8 @@ type `user`, `list` and `entry`. The endpoints are structured as follows:
 
     localhost:4000/api/v1/users/<user_id>/lists/<list_id>/entries/<entry_id>
 
-For example, create a new Todo list for a user with ID `test123` by sending a
-POST request to the following route, including the `name` of the list in the
+For example, create a new Todo list for a user with ID `test123` via a
+POST request to the following endpoint, including the `name` of the list in the
 request body:
 
     localhost:4000/api/v1/users/test123/lists/
