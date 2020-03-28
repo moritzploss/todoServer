@@ -3,6 +3,7 @@
   "credo": {:hex, :credo, "1.3.0", "37699fefdbe1b0480a5a6b73f259207e9cd7ad5e492277e22c2179bcb226a67b", [:mix], [{:bunt, "~> 0.2.0", [hex: :bunt, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: false]}], "hexpm", "8036b9226e4440d3ebce3931505e407b8d59fc95975f574c26337812e8de2a86"},
   "credo_contrib": {:hex, :credo_contrib, "0.2.0", "032af0f1f096ddc7a2128fa475fdbb34f73563ca3fb2d6f826b0fa343b76d507", [:mix], [{:credo, "~> 1.0", [hex: :credo, repo: "hexpm", optional: false]}], "hexpm", "afebe9dd51371c121aab3eb14b1c70316be4345b0333fdcedb5d6404a06be309"},
   "credo_naming": {:hex, :credo_naming, "0.4.1", "a55a2b6fdcdd35e9e464583b0a9d50a79455e38970ab33a9bbe7c8a42fdcfa41", [:make, :mix], [{:credo, "~> 1.0", [hex: :credo, repo: "hexpm", optional: false]}], "hexpm", "e0bc1847716895d1bd03a8c90ce8e04eee65cca52171512d3357696bda885db2"},
+  "ex2ms": {:hex, :ex2ms, "1.6.0", "f39bbd9ff1b0f27b3f707bab2d167066dd8965e7df1149b962d94c74615d0e09", [:mix], [], "hexpm", "0d1ab5e08421af5cd69146efb408dbb1ff77f38a2f4df5f086f2512dc8cf65bf"},
   "jason": {:hex, :jason, "1.1.2", "b03dedea67a99223a2eaf9f1264ce37154564de899fd3d8b9a21b1a6fd64afe7", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "fdf843bca858203ae1de16da2ee206f53416bbda5dc8c9e78f43243de4bc3afe"},
   "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], [], "hexpm", "c790593b4c3b601f5dc2378baae7efaf5b3d73c4c6456ba85759905be792f2ac"},
 }

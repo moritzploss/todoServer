@@ -8,6 +8,7 @@ defmodule Todo.Application do
       Todo.UserManager
     ]
     :ets.new(:list_state, [:public, :named_table])
+    :ets.new(:user_lists, [:public, :named_table])
     options = [strategy: :one_for_one, name: Todo.Supervisor]
     Supervisor.start_link(children, options)
   end
