@@ -38,6 +38,10 @@ defmodule TodoInterfaceWeb.ListController do
     json(conn, list)
   end
 
+  def create(conn, _params) do
+    json(conn, %{error: "expected parameter 'name' with value type string"})
+  end
+
   def update(conn, %{"user_id" => user_id, "id" => id, "name" => name}) do
     case ListManager.server_pid_via_list_id(id) do
       nil -> json(conn, %{error: "not found"})

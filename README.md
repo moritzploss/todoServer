@@ -3,7 +3,38 @@
 # Todo Server
 
 This repo contains an implementation of a stateful and highly concurrent Todo 
-list server built with `Elixir`, `OTP`, and `Phoenix`.
+list server built with `Elixir`, `OTP`, and `Phoenix`. The aim of the project
+was to deepen my understanding of supervision strategies in `OTP` and to explore
+`Phoenix`. The resulting app can serve as a simple backend for a Todo list
+application.
+
+In particular, the RESTful API allows for CRUD operations on resources of
+type `user`, `list` and `entry`. The endpoints are structured as follows:
+
+    localhost:4000/api/v1/users/<user_id>/lists/<list_id>/entries/<entry_id>
+
+For example, create a new Todo list for a user with ID `test123` by sending a
+POST request to the following route, including the `name` of the list in the
+request body:
+
+    localhost:4000/api/v1/users/test123/lists/
+
+One user can have multiple Todo lists. For each list, state is being persisted
+inside a separate `GenServer` process. In case of a crash, state is recovered
+via an `ets` store. The supervision strategy works as follows:
+
+```
+Todo.UserManager     ->   Todo.ListManager            ->   Todo.ListServer
+-------------------       --------------------------       ------------------------------
+- DynamicSupervisor       - DynamicSupervisor              - GenServer
+- 1 process               - 1 process for each user        - 1 process for each user list
+                          - Registered by user ID in       - Registered by list ID in
+                            Registry.TodoUsers               Registry.TodoLists
+```
+
+This strategy could be improved in the future as restarting crashed
+`ListManager` processes isn't trivial (list IDs are randomly generated at
+runtime, and don't persist if a `ListManager` crashes).
 
 ## Getting Started
 
@@ -14,11 +45,10 @@ The following assumes that you have a working installation of `Elixir`
 
 ### Todo
 
-This directory contains all logic related to creating and modifying Todo lists.
-Lists are implemented as `GenServer` processes and supervised by a
-`DynamicSupervisor`.
+This directory contains all logic related to creating, modifying and supervising
+Todo lists.
 
-To get statred, install the dependencies:
+To get started, install the dependencies:
 
     mix deps.get
 
@@ -37,19 +67,6 @@ Install the dependencies:
 
     mix deps.get
     cd assets && npm install
-
-Create a database:
-
-    docker pull postgres:12.2
-    docker run \
-        -e POSTGRES_PASSWORD=postgres \
-        -e POSTGRES_DB=todo_interface_dev \
-        -p 5432:5432 \
-        -d postgres
-
-Optionally, create an SSL certificate:
-
-    mix phx.gen.cert
 
 Then start the `Phoenix` app on `localhost:4000`:
 
