@@ -21,10 +21,10 @@ defmodule Todo.ListManager do
     )
   end
 
-  def start_list(pid) do
+  def start_list(pid, name \\ "list") do
     spec = %{
       id: ListServer,
-      start: {ListServer, :start_link, [UUID.uuid4(:default)]},
+      start: {ListServer, :start_link, [UUID.uuid4(:default), name]},
       restart: :transient,
     }
     DynamicSupervisor.start_child(pid, spec)

@@ -15,6 +15,7 @@ defmodule Todo.ListTest do
     assert Map.has_key?(list, :id)
     assert Map.has_key?(list, :owner_id)
     assert Map.has_key?(list, :entries)
+    assert Map.has_key?(list, :name)
   end
 
   test "add entry to list", %{list: list, entry: entry} do

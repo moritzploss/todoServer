@@ -28,10 +28,10 @@ defmodule TodoInterfaceWeb.ListController do
     end
   end
 
-  def create(conn, %{"user_id" => user_id}) do
+  def create(conn, %{"user_id" => user_id, "name" => name}) do
     {:ok, list} = user_id
       |> get_list_manager
-      |> ListManager.start_list
+      |> ListManager.start_list(name)
       |> elem(1)
       |> ListServer.get_list
 
@@ -45,5 +45,9 @@ defmodule TodoInterfaceWeb.ListController do
     do
       json(conn, %{})
     end
+  end
+
+  def new(conn, %{"user_id" => user_id}) do
+    render(conn, "new.html", user_id: user_id)
   end
 end

@@ -9,7 +9,7 @@ defmodule TodoInterfaceWeb.EntryControllerTest do
     user_id = UUID.uuid4(:default)
 
     %{"id" => list_id} = build_conn()
-      |> post(Routes.user_list_path(build_conn(), :create, user_id))
+      |> post(Routes.user_list_path(build_conn(), :create, user_id, %{name: "test list"}))
       |> json_response(200)
 
     %{ids: %{user_id: user_id, list_id: list_id}}

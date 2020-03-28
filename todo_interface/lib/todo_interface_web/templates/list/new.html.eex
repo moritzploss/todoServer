@@ -1,0 +1,14 @@
+<section class="phx-hero">
+  <h1><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h1>
+  <p>A productive web framework that<br/>does not compromise speed or maintainability.</p>
+</section>
+
+<section class="row">
+  <article class="column">
+      <h1><%= gettext "New List" %></h1>
+      <%= form_for @conn, Routes.user_list_path(@conn, :create, @user_id), fn f -> %>
+        <%= text_input(f, :name, placeholder: "List Name") %>
+        <%= submit "Create List" %>
+      <% end %>
+  </article>
+</section>

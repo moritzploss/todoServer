@@ -21,7 +21,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
 
   test "index/3 responds with user lists if user has lists", %{conn: conn, user_id: user_id} do
     new_list = conn
-      |> post(Routes.user_list_path(conn, :create, user_id))
+      |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
       |> json_response(200)
 
     assert %{"lists" => [^new_list]} = conn
@@ -31,7 +31,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
 
   test "create/3 responds with new list", %{conn: conn, user_id: user_id} do
     response = conn
-      |> post(Routes.user_list_path(conn, :create, user_id))
+      |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
       |> json_response(200)
 
     assert %{
@@ -43,7 +43,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
 
   test "show/4 responds with list by id", %{conn: conn, user_id: user_id} do
     newly_created_list = conn
-      |> post(Routes.user_list_path(conn, :create, user_id))
+      |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
       |> json_response(200)
 
     assert ^newly_created_list = conn
@@ -63,7 +63,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
     end
 
     %{"id" => list_id} = conn
-      |> post(Routes.user_list_path(conn, :create, user_id))
+      |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
       |> json_response(200)
 
     conn

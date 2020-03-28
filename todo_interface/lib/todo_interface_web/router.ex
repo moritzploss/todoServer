@@ -21,6 +21,12 @@ defmodule TodoInterfaceWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/users/:user_id/lists/new", TodoInterfaceWeb do
+    pipe_through :browser
+
+    get "/", ListController, :new
+  end
+
   scope "/api/v1", TodoInterfaceWeb do
     pipe_through :api
 

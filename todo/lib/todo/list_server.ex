@@ -9,8 +9,8 @@ defmodule Todo.ListServer do
 
   # Client API
 
-  def start_link(owner_id, list_id) do
-    args = %{owner_id: owner_id, list_id: list_id}
+  def start_link(owner_id, list_id, list_name \\ "list") do
+    args = %{owner_id: owner_id, list_id: list_id, list_name: list_name}
     GenServer.start_link(__MODULE__, args, name: via(list_id))
   end
 
@@ -44,8 +44,8 @@ defmodule Todo.ListServer do
     :ets.insert(:list_state, {list.id, list})
   end
 
-  defp initialize_list(owner_id, list_id) do
-    {:ok, list} = Todo.List.new(owner_id, list_id)
+  defp initialize_list(owner_id, list_id, list_name) do
+    {:ok, list} = Todo.List.new(owner_id, list_id, list_name)
     save_list_state(list)
     list
   end
@@ -53,9 +53,9 @@ defmodule Todo.ListServer do
   # Callbacks
 
   @impl GenServer
-  def init(%{owner_id: owner_id, list_id: list_id}) do
+  def init(%{owner_id: owner_id, list_id: list_id, list_name: list_name}) do
     case :ets.lookup(:list_state, list_id) do
-      [] -> {:ok, initialize_list(owner_id, list_id)}
+      [] -> {:ok, initialize_list(owner_id, list_id, list_name)}
       [{_key, list}] -> {:ok, list}
     end
   end
