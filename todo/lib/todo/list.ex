@@ -15,6 +15,10 @@ defmodule Todo.List do
     }}
   end
 
+  def rename(%List{} = todo_list, name) when is_binary(name) do
+    Map.put(todo_list, :name, name)
+  end
+
   def get_entry(%List{} = todo_list, entry_id) when is_binary(entry_id) do
     case Map.get(todo_list.entries, entry_id, nil) do
       nil -> @id_not_found_error

@@ -38,6 +38,15 @@ defmodule TodoInterfaceWeb.ListController do
     json(conn, list)
   end
 
+  def update(conn, %{"user_id" => user_id, "id" => id, "name" => name}) do
+    case ListManager.server_pid_via_list_id(id) do
+      nil -> json(conn, %{error: "not found"})
+      pid ->
+        {:ok, list} = ListServer.rename_list(pid, name)
+        json(conn, list)
+    end
+  end
+
   def delete(conn, %{"id" => id, "user_id" => user_id}) do
     with :ok <- user_id
       |> get_list_manager

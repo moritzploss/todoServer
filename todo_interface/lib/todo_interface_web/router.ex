@@ -31,7 +31,7 @@ defmodule TodoInterfaceWeb.Router do
     pipe_through :api
 
     resources "/users", UserController, only: @crud do
-      resources "/lists", ListController, only: [:index, :show, :create, :delete] do
+      resources "/lists", ListController, only: @crud do
         resources "/entries", EntryController, only: @crud
       end
     end

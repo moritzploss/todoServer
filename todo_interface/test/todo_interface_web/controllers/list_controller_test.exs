@@ -19,7 +19,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
     assert response == %{"lists" => []}
   end
 
-  test "index/3 responds with user lists if user has lists", %{conn: conn, user_id: user_id} do
+  test "index/4 responds with user lists if user has lists", %{conn: conn, user_id: user_id} do
     new_list = conn
       |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
       |> json_response(200)
@@ -29,7 +29,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
       |> json_response(200)
   end
 
-  test "create/3 responds with new list", %{conn: conn, user_id: user_id} do
+  test "create/4 responds with new list", %{conn: conn, user_id: user_id} do
     response = conn
       |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
       |> json_response(200)
@@ -39,6 +39,23 @@ defmodule TodoInterfaceWeb.ListControllerTest do
       "owner_id" => ^user_id,
       "id" => id,
     } = response
+  end
+
+  test "update/5 responds with updated list", %{conn: conn, user_id: user_id} do
+    %{"entries" => entries, "id" => list_id} = conn
+      |> post(Routes.user_list_path(conn, :create, user_id, %{name: "My List"}))
+      |> json_response(200)
+
+    put_response = conn
+      |> put(Routes.user_list_path(conn, :update, user_id, list_id, %{name: "My Renamed List"}))
+      |> json_response(200)
+
+    assert %{
+      "entries" => %{} = ^entries,
+      "owner_id" => ^user_id,
+      "id" => ^list_id,
+      "name" => "My Renamed List"
+    } = put_response
   end
 
   test "show/4 responds with list by id", %{conn: conn, user_id: user_id} do

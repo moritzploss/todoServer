@@ -18,6 +18,10 @@ defmodule Todo.ListServer do
     GenServer.call(server_pid, :get_list)
   end
 
+  def rename_list(server_pid, name) do
+    GenServer.call(server_pid, {:rename_list, name})
+  end
+
   def get_entry(server_pid, entry_id) do
     GenServer.call(server_pid, {:get_entry, entry_id})
   end
@@ -63,6 +67,12 @@ defmodule Todo.ListServer do
   @impl GenServer
   def handle_call(:get_list, _from, state) do
     {:reply, {:ok, state}, state}
+  end
+
+  @impl GenServer
+  def handle_call({:rename_list, name}, _from, state) do
+    renamed = Todo.List.rename(state, name)
+    {:reply, {:ok, renamed}, renamed}
   end
 
   @impl GenServer

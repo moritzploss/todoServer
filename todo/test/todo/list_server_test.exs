@@ -17,6 +17,15 @@ defmodule Todo.ListServerTest do
     assert list.owner_id === owner_id
   end
 
+  test "rename a list" do
+    owner_id = UUID.uuid4(:default)
+    {:ok, pid} = ListServer.start_link(owner_id, UUID.uuid4(:default), "My List")
+
+    {:ok, list} = ListServer.rename_list(pid, "My Renamed List")
+
+    assert %{name: "My Renamed List"} = list
+  end
+
   test "get the todo list from the list server", %{pid: pid} do
     {:ok, list} = ListServer.get_list(pid)
     state = :sys.get_state(pid)
