@@ -9,8 +9,8 @@ defmodule Todo.ListManager do
 
   def server_pid_via_list_id(list_id) do
     list_id
-    |> ListServer.via
-    |> GenServer.whereis
+      |> ListServer.via
+      |> GenServer.whereis
   end
 
   def start_link(user_id) do
@@ -43,10 +43,10 @@ defmodule Todo.ListManager do
 
   def get_lists(pid) do
     pid
-    |> DynamicSupervisor.which_children
-    |> Enum.map(fn {_id, list_pid, _type, _modules} -> list_pid end)
-    |> Enum.map(&ListServer.get_list(&1))
-    |> Enum.map(fn {:ok, list} -> list end)
+      |> DynamicSupervisor.which_children
+      |> Enum.map(fn {_id, list_pid, _type, _modules} -> list_pid end)
+      |> Enum.map(&ListServer.get_list(&1))
+      |> Enum.map(fn {:ok, list} -> list end)
   end
 
   def get_list(pid, list_id) do

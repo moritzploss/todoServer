@@ -9,8 +9,8 @@ defmodule Todo.UserManager do
 
   def list_supervisor_pid_via_user_id(user_id) when is_binary(user_id) do
     user_id
-    |> ListManager.via
-    |> GenServer.whereis
+      |> ListManager.via
+      |> GenServer.whereis
   end
 
   def start_list_manager(user_id) when is_binary(user_id) do
@@ -31,11 +31,11 @@ defmodule Todo.UserManager do
 
   def which_users do
     __MODULE__
-    |> DynamicSupervisor.which_children
-    |> Enum.map(fn {_id, list_manager_pid, _type, _modules} ->
-        Registry.keys(Registry.TodoUsers, list_manager_pid)
-      end)
-    |> List.flatten()
+      |> DynamicSupervisor.which_children
+      |> Enum.map(fn {_id, list_manager_pid, _type, _modules} ->
+          Registry.keys(Registry.TodoUsers, list_manager_pid)
+        end)
+      |> List.flatten()
   end
 
   def stop_list_manager(supervisor_pid) when is_pid(supervisor_pid) do
