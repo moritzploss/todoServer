@@ -44,9 +44,7 @@ The following assumes that you have a working installation of `Elixir`
 ### Todo
 
 This directory contains all logic related to creating, modifying and supervising
-Todo lists.
-
-To get started, install the dependencies:
+Todo lists. To get started, install the dependencies:
 
     mix deps.get
 
