@@ -1,16 +1,16 @@
 defmodule Todo.List do
   alias Todo.{Entry, List}
 
-  @derive {Jason.Encoder, only: [:entries, :id, :owner_id, :name]}
-  defstruct [:entries, :id, :owner_id, :name]
+  @derive {Jason.Encoder, only: [:entries, :id, :user_id, :name]}
+  defstruct [:entries, :id, :user_id, :name]
 
   @id_not_found_error {:error, :id_not_found}
 
-  def new(owner_id, list_id, name \\ "list") when is_binary(owner_id) do
+  def new(user_id, list_id, name \\ "list") when is_binary(user_id) do
     {:ok, %Todo.List{
       entries: %{},
       id: list_id,
-      owner_id: owner_id,
+      user_id: user_id,
       name: name,
     }}
   end

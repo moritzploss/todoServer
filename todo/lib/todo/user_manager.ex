@@ -12,9 +12,7 @@ defmodule Todo.UserManager do
   end
 
   @impl DynamicSupervisor
-  def init(:ok) do
-    DynamicSupervisor.init(strategy: :one_for_one)
-  end
+  def init(:ok), do: DynamicSupervisor.init(strategy: :one_for_one)
 
   # public API
 
@@ -48,8 +46,8 @@ defmodule Todo.UserManager do
   end
 
   def stop_list_manager(supervisor_pid) when is_pid(supervisor_pid) do
-    [owner_id] = Registry.keys(Registry.TodoUsers, supervisor_pid)
-    :ok = UserRepo.drop(owner_id)
+    [user_id] = Registry.keys(Registry.TodoUsers, supervisor_pid)
+    :ok = UserRepo.drop(user_id)
     :ok = Registry.unregister(TodoUsers, supervisor_pid)
     DynamicSupervisor.terminate_child(__MODULE__, supervisor_pid)
   end
@@ -61,7 +59,5 @@ defmodule Todo.UserManager do
     end
   end
 
-  def stop_list_managers do
-    Enum.each(which_users(), &stop_list_manager(&1))
-  end
+  def stop_list_managers, do: Enum.each(which_users(), &stop_list_manager(&1))
 end

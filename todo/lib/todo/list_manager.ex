@@ -41,9 +41,7 @@ defmodule Todo.ListManager do
 
   # public API
 
-  def via(user_id) do
-    {:via, Registry, {Registry.TodoUsers, user_id}}
-  end
+  def via(user_id), do: {:via, Registry, {Registry.TodoUsers, user_id}}
 
   def server_pid_via_list_id(list_id) do
     list_id
@@ -56,8 +54,8 @@ defmodule Todo.ListManager do
   end
 
   def stop_list(pid, list_pid) when is_pid(pid) and is_pid(list_pid) do
-    {:ok, %{owner_id: owner_id, id: id}} = ListServer.get_list(list_pid)
-    :ok = UserRepo.delete(owner_id, id)
+    {:ok, %{user_id: user_id, id: id}} = ListServer.get_list(list_pid)
+    :ok = UserRepo.delete(user_id, id)
     DynamicSupervisor.terminate_child(pid, list_pid)
   end
 
@@ -71,7 +69,7 @@ defmodule Todo.ListManager do
   def get_lists(pid) do
     pid
       |> DynamicSupervisor.which_children
-      |> Enum.map(fn {_id, list_pid, _type, _modules} -> list_pid end)
+      |> Enum.map(fn {_id, pid, _type, _modules} -> pid end)
       |> Enum.map(&ListServer.get_list(&1))
       |> Enum.map(fn {:ok, list} -> list end)
   end

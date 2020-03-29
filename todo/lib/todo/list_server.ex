@@ -4,14 +4,12 @@ defmodule Todo.ListServer do
   alias Todo.Entry
   alias Repo.UserRepo
 
-  def via(id) do
-    {:via, Registry, {Registry.TodoLists, id}}
-  end
+  def via(id), do: {:via, Registry, {Registry.TodoLists, id}}
 
   # Client API
 
-  def start_link(owner_id, list_id, list_name \\ "list") do
-    args = %{owner_id: owner_id, list_id: list_id, list_name: list_name}
+  def start_link(user_id, list_id, list_name \\ "list") do
+    args = %{user_id: user_id, list_id: list_id, list_name: list_name}
     GenServer.start_link(__MODULE__, args, name: via(list_id))
   end
 
@@ -45,23 +43,21 @@ defmodule Todo.ListServer do
 
   # Helper
 
-  defp save_list_state(list) do
-    :ets.insert(:list_state, {list.id, list})
-  end
+  defp save_list_state(list), do: :ets.insert(:list_state, {list.id, list})
 
-  defp initialize_list(owner_id, list_id, list_name) do
-    {:ok, list} = Todo.List.new(owner_id, list_id, list_name)
+  defp initialize_list(user_id, list_id, list_name) do
+    {:ok, list} = Todo.List.new(user_id, list_id, list_name)
     save_list_state(list)
-    UserRepo.add(owner_id, list_id)
+    UserRepo.add(user_id, list_id)
     list
   end
 
   # Callbacks
 
   @impl GenServer
-  def init(%{owner_id: owner_id, list_id: list_id, list_name: list_name}) do
+  def init(%{user_id: user_id, list_id: list_id, list_name: list_name}) do
     case :ets.lookup(:list_state, list_id) do
-      [] -> {:ok, initialize_list(owner_id, list_id, list_name)}
+      [] -> {:ok, initialize_list(user_id, list_id, list_name)}
       [{_key, list}] -> {:ok, list}
     end
   end

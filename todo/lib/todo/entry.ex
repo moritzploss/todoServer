@@ -16,9 +16,7 @@ defmodule Todo.Entry do
     }}
   end
 
-  def new(_description) do
-    {:error, :invalid_description}
-  end
+  def new(_description), do: {:error, :invalid_description}
 
   defp replace(%Entry{} = entry, :status, status) when status in @status_options do
     {:ok, Map.replace!(entry, :status, status)}

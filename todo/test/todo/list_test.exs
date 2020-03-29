@@ -13,7 +13,7 @@ defmodule Todo.ListTest do
     {:ok, list} = Todo.List.new(UUID.uuid4(:default), UUID.uuid4(:default))
 
     assert Map.has_key?(list, :id)
-    assert Map.has_key?(list, :owner_id)
+    assert Map.has_key?(list, :user_id)
     assert Map.has_key?(list, :entries)
     assert Map.has_key?(list, :name)
   end

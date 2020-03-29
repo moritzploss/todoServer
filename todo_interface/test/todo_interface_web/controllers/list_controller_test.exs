@@ -36,7 +36,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
 
     assert %{
       "entries" => %{} = entries,
-      "owner_id" => ^user_id,
+      "user_id" => ^user_id,
       "id" => id,
     } = response
   end
@@ -52,7 +52,7 @@ defmodule TodoInterfaceWeb.ListControllerTest do
 
     assert %{
       "entries" => %{} = ^entries,
-      "owner_id" => ^user_id,
+      "user_id" => ^user_id,
       "id" => ^list_id,
       "name" => "My Renamed List"
     } = put_response

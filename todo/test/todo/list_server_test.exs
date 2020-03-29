@@ -4,22 +4,22 @@ defmodule Todo.ListServerTest do
   alias Todo.ListServer
 
   setup do
-    owner_id = UUID.uuid4(:default)
-    {:ok, pid} = ListServer.start_link(owner_id, UUID.uuid4(:default))
+    user_id = UUID.uuid4(:default)
+    {:ok, pid} = ListServer.start_link(user_id, UUID.uuid4(:default))
     %{pid: pid}
   end
 
   test "start a list server process" do
-    owner_id = UUID.uuid4(:default)
-    {:ok, pid} = ListServer.start_link(owner_id, UUID.uuid4(:default))
+    user_id = UUID.uuid4(:default)
+    {:ok, pid} = ListServer.start_link(user_id, UUID.uuid4(:default))
     list = :sys.get_state(pid)
 
-    assert list.owner_id === owner_id
+    assert list.user_id === user_id
   end
 
   test "rename a list" do
-    owner_id = UUID.uuid4(:default)
-    {:ok, pid} = ListServer.start_link(owner_id, UUID.uuid4(:default), "My List")
+    user_id = UUID.uuid4(:default)
+    {:ok, pid} = ListServer.start_link(user_id, UUID.uuid4(:default), "My List")
 
     {:ok, list} = ListServer.rename_list(pid, "My Renamed List")
 
