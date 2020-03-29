@@ -2,11 +2,11 @@ defmodule Todo.ListServer do
   use GenServer
 
   alias Todo.Entry
-  alias Repo.UserRepo
+  alias Repo.{ListRepo, UserRepo}
 
   def via(id), do: {:via, Registry, {Registry.TodoLists, id}}
 
-  # Client API
+  # client API
 
   def start_link(user_id, list_id, list_name \\ "list") do
     args = %{user_id: user_id, list_id: list_id, list_name: list_name}
@@ -43,11 +43,9 @@ defmodule Todo.ListServer do
 
   # Helper
 
-  defp save_list_state(list), do: :ets.insert(:list_state, {list.id, list})
-
   defp initialize_list(user_id, list_id, list_name) do
     {:ok, list} = Todo.List.new(user_id, list_id, list_name)
-    save_list_state(list)
+    ListRepo.save(list)
     UserRepo.add(user_id, list_id)
     list
   end
@@ -56,9 +54,9 @@ defmodule Todo.ListServer do
 
   @impl GenServer
   def init(%{user_id: user_id, list_id: list_id, list_name: list_name}) do
-    case :ets.lookup(:list_state, list_id) do
-      [] -> {:ok, initialize_list(user_id, list_id, list_name)}
-      [{_key, list}] -> {:ok, list}
+    case ListRepo.lookup(list_id) do
+      {:ok, nil} -> {:ok, initialize_list(user_id, list_id, list_name)}
+      {:ok, list} -> {:ok, list}
     end
   end
 
@@ -91,7 +89,7 @@ defmodule Todo.ListServer do
     with {:ok, entry} <- Entry.new(description),
       {:ok, list} <- Todo.List.add_entry(state, entry)
     do
-      save_list_state(list)
+      ListRepo.save(list)
       {:reply, {:ok, entry}, list}
     else
       {:error, reason} -> {:reply, {:error, reason}, state}
@@ -104,7 +102,7 @@ defmodule Todo.ListServer do
       {:ok, entry} <- Entry.update(entry, to_update),
       {:ok, list} <- Todo.List.update_entry(state, entry_id, entry)
     do
-      save_list_state(list)
+      ListRepo.save(list)
       {:reply, {:ok, entry}, list}
     else
       {:error, reason} -> {:reply, {:error, reason}, state}
@@ -115,7 +113,7 @@ defmodule Todo.ListServer do
   def handle_call({:delete_entry, entry_id}, _from, state) do
     case Todo.List.delete_entry(state, entry_id) do
       {:ok, list} ->
-        save_list_state(list)
+        ListRepo.save(list)
         {:reply, :ok, list}
       {:error, reason} -> {:reply, {:error, reason}, state}
     end

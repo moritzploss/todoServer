@@ -1,9 +1,8 @@
 defmodule Repo.UserRepo do
-
-  @collection :user_lists
+  @table :user_lists
 
   def lookup(user_id) do
-    case :ets.lookup(@collection, user_id) do
+    case :ets.lookup(@table, user_id) do
       [] -> {:ok, []}
       [{_key, list_ids}] -> {:ok, list_ids}
     end
@@ -11,10 +10,8 @@ defmodule Repo.UserRepo do
 
   def add(user_id, list_id) do
     {:ok, list_ids} = lookup(user_id)
-    case :ets.insert(@collection, {user_id, [list_id | list_ids]}) do
-      true -> :ok
-      false -> :error
-    end
+    :ets.insert(@table, {user_id, [list_id | list_ids]})
+    :ok
   end
 
   def delete(user_id, list_id) do
@@ -23,16 +20,12 @@ defmodule Repo.UserRepo do
       |> elem(1)
       |> Enum.filter(fn id -> id !== list_id end)
 
-    case :ets.insert(@collection, {user_id, without_list_id}) do
-      true -> :ok
-      false -> :error
-    end
+    :ets.insert(@table, {user_id, without_list_id})
+    :ok
   end
 
   def drop(user_id) do
-    case :ets.delete(@collection, user_id) do
-      true -> :ok
-      false -> :error
-    end
+    :ets.delete(@table, user_id)
+    :ok
   end
 end
