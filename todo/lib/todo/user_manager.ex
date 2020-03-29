@@ -1,9 +1,9 @@
 defmodule Todo.UserManager do
   use DynamicSupervisor
 
-  alias Todo.ListManager
   alias Registry.TodoUsers
   alias Repo.UserRepo
+  alias Todo.ListManager
 
   # init
 
@@ -42,7 +42,7 @@ defmodule Todo.UserManager do
     __MODULE__
       |> DynamicSupervisor.which_children
       |> Enum.map(fn {_, pid, _, _} -> Registry.keys(TodoUsers, pid) end)
-      |> List.flatten()
+      |> List.flatten
   end
 
   def stop_list_manager(supervisor_pid) when is_pid(supervisor_pid) do
