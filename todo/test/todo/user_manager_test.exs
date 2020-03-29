@@ -1,7 +1,7 @@
 defmodule Todo.UserManagerTest do
   use ExUnit.Case, async: false
 
-  alias Todo.UserManager
+  alias Todo.{ListManager, ListServer, UserManager}
 
   setup do
     on_exit(&UserManager.stop_list_managers/0)
@@ -53,5 +53,34 @@ defmodule Todo.UserManagerTest do
 
   test "keep track of all users", %{user_id: user_id} do
     assert [^user_id] = UserManager.which_users()
+  end
+
+  test "restart crashed list manager with last good state", %{pid: pid} do
+    {:ok, _entry} = pid
+     |> ListManager.start_list
+     |> elem(1)
+     |> ListServer.add_entry("test")
+
+    lists_before_crash = ListManager.get_lists(pid)
+
+    only_pids = fn children ->
+      Enum.map(children, fn {_, pid, _, _} -> pid end)
+    end
+
+    child_pids_before_crash = UserManager
+      |> DynamicSupervisor.which_children
+      |> only_pids.()
+
+    Process.exit(pid, :kill)
+    Process.sleep(10)
+
+    lists_after_crash = UserManager
+      |> DynamicSupervisor.which_children
+      |> only_pids.()
+      |> Enum.filter(fn pid -> pid not in child_pids_before_crash end)
+      |> Enum.at(0)
+      |> ListManager.get_lists
+
+    assert lists_before_crash === lists_after_crash
   end
 end

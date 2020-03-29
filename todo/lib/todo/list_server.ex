@@ -2,6 +2,7 @@ defmodule Todo.ListServer do
   use GenServer
 
   alias Todo.Entry
+  alias Repo.UserRepo
 
   def via(id) do
     {:via, Registry, {Registry.TodoLists, id}}
@@ -51,6 +52,7 @@ defmodule Todo.ListServer do
   defp initialize_list(owner_id, list_id, list_name) do
     {:ok, list} = Todo.List.new(owner_id, list_id, list_name)
     save_list_state(list)
+    UserRepo.add(owner_id, list_id)
     list
   end
 

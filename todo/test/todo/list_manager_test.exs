@@ -21,7 +21,7 @@ defmodule Todo.ListManagerTest do
   end
 
   test "stop list server", %{pid: pid, list_pid: list_pid} do
-    assert Process.alive?(list_pid)
+    true = Process.alive?(list_pid)
     ListManager.stop_list(pid, list_pid)
     assert not Process.alive?(list_pid)
   end
@@ -62,7 +62,6 @@ defmodule Todo.ListManagerTest do
       end)
 
     count_workers = fn ->
-      # IO.inspect DynamicSupervisor.which_children(pid)
       DynamicSupervisor.count_children(pid).workers
     end
 

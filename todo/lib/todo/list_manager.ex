@@ -2,6 +2,44 @@ defmodule Todo.ListManager do
   use DynamicSupervisor
 
   alias Todo.ListServer
+  alias Repo.UserRepo
+
+  # init
+
+  def start_link(user_id) do
+    {:ok, pid} = DynamicSupervisor.start_link(
+      __MODULE__,
+      {:user_id, user_id},
+      name: via(user_id)
+    )
+    :ok = recover_children(pid, user_id)
+    {:ok, pid}
+  end
+
+  @impl DynamicSupervisor
+  def init({:user_id, user_id}) do
+    DynamicSupervisor.init(strategy: :one_for_one, extra_arguments: [user_id])
+  end
+
+  # init children
+
+  defp start_list_server(pid, list_id, name \\ "list") do
+    spec = %{
+      id: ListServer,
+      start: {ListServer, :start_link, [list_id, name]},
+      restart: :transient,
+    }
+    DynamicSupervisor.start_child(pid, spec)
+  end
+
+  defp recover_children(pid, user_id) do
+    user_id
+      |> UserRepo.lookup
+      |> elem(1)
+      |> Enum.each(fn list_id -> start_list_server(pid, list_id) end)
+  end
+
+  # public API
 
   def via(user_id) do
     {:via, Registry, {Registry.TodoUsers, user_id}}
@@ -13,24 +51,13 @@ defmodule Todo.ListManager do
       |> GenServer.whereis
   end
 
-  def start_link(user_id) do
-    DynamicSupervisor.start_link(
-      __MODULE__,
-      {:user_id, user_id},
-      name: via(user_id)
-    )
-  end
-
   def start_list(pid, name \\ "list") do
-    spec = %{
-      id: ListServer,
-      start: {ListServer, :start_link, [UUID.uuid4(:default), name]},
-      restart: :transient,
-    }
-    DynamicSupervisor.start_child(pid, spec)
+    start_list_server(pid, UUID.uuid4(:default), name)
   end
 
   def stop_list(pid, list_pid) when is_pid(pid) and is_pid(list_pid) do
+    {:ok, %{owner_id: owner_id, id: id}} = ListServer.get_list(list_pid)
+    :ok = UserRepo.delete(owner_id, id)
     DynamicSupervisor.terminate_child(pid, list_pid)
   end
 
@@ -55,13 +82,5 @@ defmodule Todo.ListManager do
       nil -> {:error, :not_found}
       list -> {:ok, list}
     end
-  end
-
-  @impl DynamicSupervisor
-  def init({:user_id, user_id}) do
-    DynamicSupervisor.init(
-      strategy: :one_for_one,
-      extra_arguments: [user_id]
-    )
   end
 end
