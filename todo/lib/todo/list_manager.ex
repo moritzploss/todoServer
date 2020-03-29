@@ -56,6 +56,7 @@ defmodule Todo.ListManager do
   def stop_list(pid, list_pid) when is_pid(pid) and is_pid(list_pid) do
     {:ok, %{user_id: user_id, id: id}} = ListServer.get_list(list_pid)
     :ok = UserRepo.delete(user_id, id)
+    true = :ets.delete(:list_state, id)
     DynamicSupervisor.terminate_child(pid, list_pid)
   end
 
